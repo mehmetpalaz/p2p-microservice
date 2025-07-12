@@ -1,11 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36301.6 d17.14
+VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TransferService", "TransferService", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransferService.API", "TransferService\TransferService.API\TransferService.API.csproj", "{9B5CC7EA-40B2-4F6C-A154-689EBBF3EBB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransferService.Application", "TransferService\TransferService.Application\TransferService.Application.csproj", "{4B6FA0F0-8C1E-4FF5-924D-BED6C09FE54D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransferService.Domain", "TransferService\TransferService.Domain\TransferService.Domain.csproj", "{DF4B7AFF-8AAC-4E0D-9D72-F865C46A7F77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransferService.Infrastructure", "TransferService\TransferService.Infrastructure\TransferService.Infrastructure.csproj", "{225044EA-ED85-4890-9E21-4BC4590E8694}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransferService.Persistence", "TransferService\TransferService.Persistence\TransferService.Persistence.csproj", "{5FB7622A-724F-4DD8-9894-992332691DE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +25,32 @@ Global
 		{9B5CC7EA-40B2-4F6C-A154-689EBBF3EBB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B5CC7EA-40B2-4F6C-A154-689EBBF3EBB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B5CC7EA-40B2-4F6C-A154-689EBBF3EBB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B6FA0F0-8C1E-4FF5-924D-BED6C09FE54D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B6FA0F0-8C1E-4FF5-924D-BED6C09FE54D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B6FA0F0-8C1E-4FF5-924D-BED6C09FE54D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B6FA0F0-8C1E-4FF5-924D-BED6C09FE54D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF4B7AFF-8AAC-4E0D-9D72-F865C46A7F77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF4B7AFF-8AAC-4E0D-9D72-F865C46A7F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF4B7AFF-8AAC-4E0D-9D72-F865C46A7F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF4B7AFF-8AAC-4E0D-9D72-F865C46A7F77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{225044EA-ED85-4890-9E21-4BC4590E8694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{225044EA-ED85-4890-9E21-4BC4590E8694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{225044EA-ED85-4890-9E21-4BC4590E8694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{225044EA-ED85-4890-9E21-4BC4590E8694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FB7622A-724F-4DD8-9894-992332691DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FB7622A-724F-4DD8-9894-992332691DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FB7622A-724F-4DD8-9894-992332691DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FB7622A-724F-4DD8-9894-992332691DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9B5CC7EA-40B2-4F6C-A154-689EBBF3EBB4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{4B6FA0F0-8C1E-4FF5-924D-BED6C09FE54D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{DF4B7AFF-8AAC-4E0D-9D72-F865C46A7F77} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{225044EA-ED85-4890-9E21-4BC4590E8694} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{5FB7622A-724F-4DD8-9894-992332691DE4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBB6BD3F-EE9F-4518-B866-1468D5B87ECD}
