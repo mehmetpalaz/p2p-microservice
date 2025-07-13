@@ -1,6 +1,6 @@
 ﻿namespace TransferService.Domain.ValueObjects
 {
-    public record Money
+    public class Money
     {
         public decimal Amount { get; init; }
         public string Currency { get; init; }
@@ -12,6 +12,8 @@
             Amount = amount;
             Currency = currency;
         }
-    }
 
+        // EF için parametresiz ctor
+        private Money() { }
+    }
 }

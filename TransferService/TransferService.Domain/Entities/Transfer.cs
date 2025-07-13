@@ -18,6 +18,10 @@ namespace TransferService.Domain.Entities
             Amount = amount;
             CreatedAt = DateTime.UtcNow;
         }
-    }
 
+        private Transfer()
+        {
+            // EF için parametresiz ctor
+        }
+    }
 }

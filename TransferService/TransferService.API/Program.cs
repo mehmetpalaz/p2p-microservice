@@ -1,7 +1,9 @@
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TransferService.Application.Behaviors;
 using TransferService.Application.Commands.CreateTransfer;
+using TransferService.Persistence.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,9 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateTransferCommandValidator).Assembly);
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+builder.Services.AddDbContext<TransferDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 
 builder.Services.AddControllers();
