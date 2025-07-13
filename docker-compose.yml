@@ -1,0 +1,26 @@
+services:
+  transfer-api:
+    build:
+      context: .
+      dockerfile: TransferService/TransferService.API/Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=TransferDb;Username=postgres;Password=postgres
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: TransferDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
