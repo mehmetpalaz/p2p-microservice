@@ -7,9 +7,20 @@ services:
       - "5000:8080"
     depends_on:
       - postgres
+      - rabbitmq
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__Default=Host=postgres;Port=5432;Database=TransferDb;Username=postgres;Password=postgres
+  
+  notification-service:
+    build:
+      context: .
+      dockerfile: NotificationService/NotificationService.API/Dockerfile
+    depends_on:
+      - rabbitmq
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
 
   postgres:
     image: postgres:15
@@ -21,6 +32,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+  
   rabbitmq:
     image: rabbitmq:3-management
     ports:

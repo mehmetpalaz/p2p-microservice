@@ -10,23 +10,23 @@ namespace TransferService.Infrastructure.Messaging
 
     public class RabbitMqEventPublisher : IRabbitMqEventPublisher
     {
-        private readonly IConnection _connection;
+        private readonly ConnectionFactory _factory;
 
         public RabbitMqEventPublisher()
         {
-            var factory = new ConnectionFactory()
+            _factory = new ConnectionFactory()
             {
                 HostName = "rabbitmq",
                 UserName = "guest",
                 Password = "guest"
             };
-
-            _connection = factory.CreateConnection();
         }
 
         public void Publish(string message, string messageType)
         {
-            using var channel = _connection.CreateModel();
+            using var connection = _factory.CreateConnection();
+            using var channel = connection.CreateModel();
+
             channel.ExchangeDeclare("transfer_exchange", ExchangeType.Fanout, durable: true);
 
             var body = Encoding.UTF8.GetBytes(message);

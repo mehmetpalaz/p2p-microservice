@@ -33,12 +33,19 @@ builder.Services.AddSingleton<IRabbitMqEventPublisher, RabbitMqEventPublisher>()
 builder.Services.AddHostedService<OutboxPublisherService>();
 
 
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TransferDbContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 

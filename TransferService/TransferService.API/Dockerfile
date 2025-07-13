@@ -11,7 +11,6 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Tüm projeleri ve kaynak dosyaları kopyala
 COPY TransferService/TransferService.API/ TransferService.API/
 COPY TransferService/TransferService.Application/ TransferService.Application/
 COPY TransferService/TransferService.Domain/ TransferService.Domain/
