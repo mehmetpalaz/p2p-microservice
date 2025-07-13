@@ -5,6 +5,8 @@ using TransferService.Application.Behaviors;
 using TransferService.Application.Commands.CreateTransfer;
 using TransferService.Application.Interfaces;
 using TransferService.Application.Repositories;
+using TransferService.Infrastructure.Background;
+using TransferService.Infrastructure.Messaging;
 using TransferService.Persistence;
 using TransferService.Persistence.Contexts;
 using TransferService.Persistence.Repositories;
@@ -26,6 +28,10 @@ builder.Services.AddDbContext<TransferDbContext>(options =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<ITransferRepository, TransferRepository>();
+
+builder.Services.AddSingleton<IRabbitMqEventPublisher, RabbitMqEventPublisher>();
+builder.Services.AddHostedService<OutboxPublisherService>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
