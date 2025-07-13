@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TransferService.Domain\TransferService.Domain.csproj" />
+	  <ProjectReference Include="..\TransferService.Domain\TransferService.Domain.csproj" />
   </ItemGroup>
 
 </Project>
