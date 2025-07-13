@@ -1,13 +1,19 @@
+using FluentValidation;
+using MediatR;
+using TransferService.Application.Behaviors;
 using TransferService.Application.Commands.CreateTransfer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(CreateTransferCommand).Assembly);
 });
+
+builder.Services.AddValidatorsFromAssembly(typeof(CreateTransferCommandValidator).Assembly);
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
