@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Connections;
+using NotificationService.Application.Handlers;
+using NotificationService.Domain.Events;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Channels;
 
 namespace NotificationService.API.Messaging
 {
@@ -11,7 +15,14 @@ namespace NotificationService.API.Messaging
         private IConnection _connection;
         private IModel _channel;
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        private readonly TransferCreatedEventHandler _handler;
+
+        public TransferCreatedConsumer()
+        {
+            _handler = new TransferCreatedEventHandler();
+        }
+
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var factory = new ConnectionFactory()
             {
@@ -20,6 +31,64 @@ namespace NotificationService.API.Messaging
                 Password = "guest"
             };
 
+            CreateConnection(factory);
+
+            DeclareAndBindQueue();
+
+            var consumer = new EventingBasicConsumer(_channel);
+
+            consumer.Received += async (model, ea) =>
+            {
+                try
+                {
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+
+                    var transferEvent = JsonSerializer.Deserialize<TransferCreatedEvent>(message);
+                    
+                    await _handler.HandleAsync(transferEvent!);
+                    
+                    _channel.BasicAck(ea.DeliveryTag, multiple: false);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"🔥 [NotificationService] Error: {ex.Message}");
+                   
+                    _channel.BasicNack(ea.DeliveryTag, multiple: false, requeue: false);
+                }
+            };
+
+            _channel.BasicConsume(queue: "notification_queue", autoAck: false, consumer: consumer);
+        }
+
+        private void DeclareAndBindQueue()
+        {
+            _channel = _connection.CreateModel();
+
+            _channel.ExchangeDeclare("transfer_exchange", ExchangeType.Fanout, durable: true);
+
+            _channel.QueueDeclare("notification_queue", durable: true, exclusive: false, autoDelete: false,
+                arguments: new Dictionary<string, object>
+            {
+                { "x-dead-letter-exchange", "dlx.exchange" },
+                { "x-dead-letter-routing-key", "transfer-created-dlq" }
+            });
+
+            _channel.QueueBind("notification_queue", "transfer_exchange", "");
+
+            _channel.ExchangeDeclare("dlx.exchange", ExchangeType.Direct, durable: true);
+
+            _channel.QueueDeclare(queue: "transfer-created-dlq",
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
+
+            _channel.QueueBind("transfer-created-dlq", "dlx.exchange", "transfer-created-dlq");
+        }
+
+        private void CreateConnection(ConnectionFactory factory)
+        {
             int retryCount = 5;
 
             while (retryCount > 0)
@@ -38,25 +107,6 @@ namespace NotificationService.API.Messaging
                         throw;
                 }
             }
-
-            _channel = _connection.CreateModel();
-
-            _channel.ExchangeDeclare("transfer_exchange", ExchangeType.Fanout, durable: true);
-            _channel.QueueDeclare("notification_queue", durable: true, exclusive: false, autoDelete: false);
-            _channel.QueueBind("notification_queue", "transfer_exchange", "");
-
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-
-                Console.WriteLine($"📨 [NotificationService] Transfer Event Received: {message}");
-            };
-
-            _channel.BasicConsume(queue: "notification_queue", autoAck: true, consumer: consumer);
-
-            return Task.CompletedTask;
         }
 
         public override void Dispose()
@@ -66,5 +116,4 @@ namespace NotificationService.API.Messaging
             base.Dispose();
         }
     }
-
 }

@@ -12,8 +12,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY NotificationService/NotificationService.API/ NotificationService.API/
+COPY NotificationService/NotificationService.Domain/ NotificationService.Domain/
+COPY NotificationService/NotificationService.Application/ NotificationService.Application/
+COPY NotificationService/NotificationService.Infrastructure/ NotificationService.Infrastructure/
 
-# API projesinin bağımlılıklarını restore et
+# API
 RUN dotnet restore "NotificationService.API/NotificationService.API.csproj"
 
 # Build
