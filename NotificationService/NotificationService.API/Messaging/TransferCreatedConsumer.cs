@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Connections;
+using NotificationService.Application.Abstractions;
 using NotificationService.Application.Handlers;
 using NotificationService.Domain.Events;
 using RabbitMQ.Client;
@@ -15,13 +16,12 @@ namespace NotificationService.API.Messaging
         private IConnection _connection;
         private IModel _channel;
 
-        private readonly TransferCreatedEventHandler _handler;
+        private readonly IServiceProvider _serviceProvider;
 
-        public TransferCreatedConsumer()
+        public TransferCreatedConsumer(IServiceProvider serviceProvider)
         {
-            _handler = new TransferCreatedEventHandler();
+                _serviceProvider = serviceProvider;
         }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var factory = new ConnectionFactory()
@@ -45,7 +45,11 @@ namespace NotificationService.API.Messaging
                     var message = Encoding.UTF8.GetString(body);
 
                     var transferEvent = JsonSerializer.Deserialize<TransferCreatedEvent>(message);
+
+                    using var scope = _serviceProvider.CreateScope();
                     
+                    var _handler = scope.ServiceProvider.GetRequiredService<ITransferCreatedEventHandler>();
+
                     await _handler.HandleAsync(transferEvent!);
                     
                     _channel.BasicAck(ea.DeliveryTag, multiple: false);

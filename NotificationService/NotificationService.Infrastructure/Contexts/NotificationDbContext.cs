@@ -14,7 +14,7 @@ namespace NotificationService.Infrastructure.Contexts
         {
         }
 
-        DbSet<InboxMessage> InboxMessages => Set<InboxMessage>();
+        public DbSet<InboxMessage> InboxMessages => Set<InboxMessage>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
