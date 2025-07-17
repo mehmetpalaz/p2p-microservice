@@ -17,10 +17,12 @@ services:
       context: .
       dockerfile: NotificationService/NotificationService.API/Dockerfile
     depends_on:
+      - postgres
       - rabbitmq
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=TransferDb;Username=postgres;Password=postgres
 
   postgres:
     image: postgres:15
