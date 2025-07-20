@@ -34,22 +34,6 @@ This system follows **Clean Architecture** principles with **Domain-Driven Desig
 - **Event Sourcing** with Outbox Pattern
 - **Repository Pattern**
 - **Unit of Work Pattern**
-
-## :classical_building: Project Structure
-P2PBankingSystem/
-├── TransferService/
-│   ├── TransferService.API/          # Web API layer
-│   ├── TransferService.Application/  # Application logic & CQRS
-│   ├── TransferService.Domain/       # Domain entities & business logic
-│   ├── TransferService.Infrastructure/ # External dependencies
-│   └── TransferService.Persistence/  # Data access layer
-├── NotificationService/
-│   ├── NotificationService.API/      # Web API layer
-│   ├── NotificationService.Application/ # Application logic
-│   ├── NotificationService.Domain/   # Domain entities
-│   └── NotificationService.Infrastructure/ # Data access & messaging
-├── Contracts/                        # Shared contracts & events
-└── docker-compose.yml               # Container orchestration
 ## :rocket: Features
 
 ### Transfer Service
