@@ -1,8 +1,8 @@
-# P2P Banking System ??
+# P2P Banking System :bank:
 
 A distributed peer-to-peer banking system built with .NET 8, implementing Clean Architecture principles and Event-Driven microservices.
 
-## ??? Architecture Overview
+## :building_construction: Architecture Overview
 
 This system follows **Clean Architecture** principles with **Domain-Driven Design (DDD)** and implements an **Event-Driven Architecture** using microservices pattern.
 
@@ -12,7 +12,7 @@ This system follows **Clean Architecture** principles with **Domain-Driven Desig
 - **Notification Service**: Manages notifications for transfer events
 - **Contracts**: Shared contracts and events between services
 
-## ??? Technology Stack
+## :hammer_and_wrench: Technology Stack
 
 ### Backend
 - **.NET 8** - Runtime and framework
@@ -35,26 +35,22 @@ This system follows **Clean Architecture** principles with **Domain-Driven Desig
 - **Repository Pattern**
 - **Unit of Work Pattern**
 
-## ??? Project Structure
-
-```
+## :classical_building: Project Structure
 P2PBankingSystem/
-??? TransferService/
-?   ??? TransferService.API/          # Web API layer
-?   ??? TransferService.Application/  # Application logic & CQRS
-?   ??? TransferService.Domain/       # Domain entities & business logic
-?   ??? TransferService.Infrastructure/ # External dependencies
-?   ??? TransferService.Persistence/  # Data access layer
-??? NotificationService/
-?   ??? NotificationService.API/      # Web API layer
-?   ??? NotificationService.Application/ # Application logic
-?   ??? NotificationService.Domain/   # Domain entities
-?   ??? NotificationService.Infrastructure/ # Data access & messaging
-??? Contracts/                        # Shared contracts & events
-??? docker-compose.yml               # Container orchestration
-```
-
-## ?? Features
+├── TransferService/
+│   ├── TransferService.API/          # Web API layer
+│   ├── TransferService.Application/  # Application logic & CQRS
+│   ├── TransferService.Domain/       # Domain entities & business logic
+│   ├── TransferService.Infrastructure/ # External dependencies
+│   └── TransferService.Persistence/  # Data access layer
+├── NotificationService/
+│   ├── NotificationService.API/      # Web API layer
+│   ├── NotificationService.Application/ # Application logic
+│   ├── NotificationService.Domain/   # Domain entities
+│   └── NotificationService.Infrastructure/ # Data access & messaging
+├── Contracts/                        # Shared contracts & events
+└── docker-compose.yml               # Container orchestration
+## :rocket: Features
 
 ### Transfer Service
 - **Create Money Transfers**: Process P2P money transfers between users
@@ -68,7 +64,7 @@ P2PBankingSystem/
 - **Notification Handling**: Processes transfer notifications
 - **Inbox Pattern**: Ensures exactly-once message processing
 
-## ?? Getting Started
+## :wrench: Getting Started
 
 ### Prerequisites
 - **.NET 8 SDK**
@@ -77,48 +73,28 @@ P2PBankingSystem/
 
 ### Running the Application
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd P2PBankingSystem
-   ```
+1. **Clone the repository**git clone <repository-url>
+cd P2PBankingSystem
+2. **Start the infrastructure services**docker-compose up -d postgres rabbitmq
+3. **Run the services**# Terminal 1 - Transfer Service
+cd TransferService/TransferService.API
+dotnet run
 
-2. **Start the infrastructure services**
-   ```bash
-   docker-compose up -d postgres rabbitmq
-   ```
-
-3. **Run the services**
-   ```bash
-   # Terminal 1 - Transfer Service
-   cd TransferService/TransferService.API
-   dotnet run
-
-   # Terminal 2 - Notification Service
-   cd NotificationService/NotificationService.API
-   dotnet run
-   ```
-
-   **Or using Docker Compose:**
-   ```bash
-   docker-compose up --build
-   ```
-
+# Terminal 2 - Notification Service
+cd NotificationService/NotificationService.API
+dotnet run
+   **Or using Docker Compose:**docker-compose up --build
 ### API Endpoints
 
 #### Transfer Service
-- **POST** `/api/transfers` - Create a new transfer
-  ```json
-  {
-    "senderUserId": "guid",
-    "receiverUserId": "guid",
-    "amount": {
-      "amount": 100.00,
-      "currency": "USD"
+- **POST** `/api/transfers` - Create a new transfer{
+  "senderUserId": "guid",
+  "receiverUserId": "guid",
+  "amount": {
+    "amount": 100.00,
+    "currency": "USD"
     }
   }
-  ```
-
 ### Accessing Services
 - **Transfer Service API**: http://localhost:5000
 - **Transfer Service Swagger**: http://localhost:5000/swagger
@@ -126,7 +102,7 @@ P2PBankingSystem/
 - **RabbitMQ Management**: http://localhost:15672 (guest/guest)
 - **PostgreSQL**: localhost:5432 (postgres/postgres)
 
-## ??? Database Schema
+## :file_cabinet: Database Schema
 
 ### Transfer Service Database (TransferDb)
 - **Transfers**: Main transfer entities with money value objects
@@ -138,7 +114,7 @@ P2PBankingSystem/
 - **InboxState**: Inbox pattern for message deduplication
 - **OutboxState**: Outbox pattern state management
 
-## ?? Event Flow
+## :email: Event Flow
 
 1. **Transfer Creation**: User creates a transfer via Transfer Service API
 2. **Domain Event**: `TransferCreatedDomainEvent` is raised
@@ -146,33 +122,17 @@ P2PBankingSystem/
 4. **Event Consumption**: Notification Service consumes the event
 5. **Notification Processing**: Notification is processed and stored
 
-## ?? Development
+## :test_tube: Development
 
 ### Adding a New Migration
 
-**Transfer Service:**
-```bash
-cd TransferService/TransferService.Persistence
+**Transfer Service:**cd TransferService/TransferService.Persistence
 dotnet ef migrations add <MigrationName> --startup-project ../TransferService.API
-```
-
-**Notification Service:**
-```bash
-cd NotificationService/NotificationService.Infrastructure
+**Notification Service:**cd NotificationService/NotificationService.Infrastructure
 dotnet ef migrations add <MigrationName> --startup-project ../NotificationService.API
-```
-
-### Building the Project
-```bash
-dotnet build
-```
-
-### Running Tests
-```bash
-dotnet test
-```
-
-## ?? Configuration
+### Building the Projectdotnet build
+### Running Testsdotnet test
+## :lock: Configuration
 
 ### Environment Variables
 - `ASPNETCORE_ENVIRONMENT`: Application environment (Development/Production/Docker)
@@ -186,7 +146,7 @@ dotnet test
 - `appsettings.Development.json`: Development-specific settings
 - `appsettings.Docker.json`: Docker environment settings
 
-## ?? Contributing
+## :handshake: Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
@@ -194,7 +154,7 @@ dotnet test
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## ?? TODO / Roadmap
+## :clipboard: TODO / Roadmap
 
 - [ ] Add authentication and authorization
 - [ ] Implement user management service
@@ -207,11 +167,11 @@ dotnet test
 - [ ] Add caching layer
 - [ ] Implement saga pattern for complex workflows
 
-## ?? License
+## :page_facing_up: License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## ?? Related Technologies
+## :link: Related Technologies
 
 - [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
@@ -224,4 +184,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ?? using Clean Architecture and Domain-Driven Design principles**
+**Built with :heart: using Clean Architecture and Domain-Driven Design principles**
