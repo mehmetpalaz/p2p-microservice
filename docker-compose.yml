@@ -9,7 +9,7 @@ services:
       - postgres
       - rabbitmq
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Docker
       - ConnectionStrings__Default=Host=postgres;Port=5432;Database=TransferDb;Username=postgres;Password=postgres
   
   notification-service:
@@ -21,19 +21,20 @@ services:
       - rabbitmq
     restart: always
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=TransferDb;Username=postgres;Password=postgres
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=NotificationDb;Username=postgres;Password=postgres
 
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_DB: TransferDb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
   
   rabbitmq:
     image: rabbitmq:3-management
@@ -43,7 +44,6 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
-
 
 volumes:
   pgdata:

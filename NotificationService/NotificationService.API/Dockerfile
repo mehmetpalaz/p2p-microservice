@@ -11,16 +11,23 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY NotificationService/NotificationService.API/ NotificationService.API/
-COPY NotificationService/NotificationService.Domain/ NotificationService.Domain/
-COPY NotificationService/NotificationService.Application/ NotificationService.Application/
-COPY NotificationService/NotificationService.Infrastructure/ NotificationService.Infrastructure/
+# Copy Contracts project with correct path structure
+COPY Contracts/Contracts.csproj Contracts/
+COPY Contracts/ Contracts/
+
+# Copy NotificationService projects
+COPY NotificationService/NotificationService.API/ NotificationService/NotificationService.API/
+COPY NotificationService/NotificationService.Domain/ NotificationService/NotificationService.Domain/
+COPY NotificationService/NotificationService.Application/ NotificationService/NotificationService.Application/
+COPY NotificationService/NotificationService.Infrastructure/ NotificationService/NotificationService.Infrastructure/
+
+RUN ls -la /src/Contracts
 
 # API
-RUN dotnet restore "NotificationService.API/NotificationService.API.csproj"
+RUN dotnet restore "NotificationService/NotificationService.API/NotificationService.API.csproj"
 
 # Build
-WORKDIR /src/NotificationService.API
+WORKDIR /src/NotificationService/NotificationService.API
 RUN dotnet build "NotificationService.API.csproj" -c Release -o /app/build
 
 # --------------------

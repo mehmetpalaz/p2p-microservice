@@ -1,4 +1,4 @@
-﻿using NotificationService.Domain.Events;
+﻿using Contracts.Events;
 
 namespace NotificationService.Application.Abstractions
 {

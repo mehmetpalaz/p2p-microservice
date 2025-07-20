@@ -13,7 +13,7 @@
             Currency = currency;
         }
 
-        // EF için parametresiz ctor
+        // Parameterless constructor for EF
         private Money() { }
     }
 }

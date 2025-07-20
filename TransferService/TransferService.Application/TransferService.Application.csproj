@@ -12,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+	  <ProjectReference Include="..\..\Contracts\Contracts.csproj" />
 	  <ProjectReference Include="..\TransferService.Domain\TransferService.Domain.csproj" />
+	  <ProjectReference Include="..\TransferService.Infrastructure\TransferService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

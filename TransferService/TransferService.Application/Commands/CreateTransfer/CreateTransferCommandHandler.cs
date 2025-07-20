@@ -8,7 +8,6 @@ namespace TransferService.Application.Commands.CreateTransfer
 {
     public class CreateTransferCommandHandler : IRequestHandler<CreateTransferCommand, Guid>
     {
-
         private readonly ITransferRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -21,13 +20,13 @@ namespace TransferService.Application.Commands.CreateTransfer
         public async Task<Guid> Handle(CreateTransferCommand request, CancellationToken cancellationToken)
         {
             var transfer = new Transfer(request.SenderUser,
-                request.ReceiverUser, 
+                request.ReceiverUser,
                 new Money(request.Amount, request.Currency));
 
             await _repository.AddAsync(transfer, cancellationToken);
-
+            
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
+            
             return transfer.Id;
         }
     }

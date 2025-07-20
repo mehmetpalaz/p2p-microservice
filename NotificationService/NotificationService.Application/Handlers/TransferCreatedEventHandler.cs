@@ -1,64 +1,56 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Contracts.Events;
+using Microsoft.Extensions.Logging;
 using NotificationService.Application.Abstractions;
-using NotificationService.Domain.Events;
-using NotificationService.Infrastructure.Contexts;
-using NotificationService.Infrastructure.Inbox;
-using Npgsql;
-
 
 namespace NotificationService.Application.Handlers
 {
     public class TransferCreatedEventHandler : ITransferCreatedEventHandler
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<TransferCreatedEventHandler> _logger;
 
-        public TransferCreatedEventHandler(IServiceProvider serviceProvider)
+        public TransferCreatedEventHandler(ILogger<TransferCreatedEventHandler> logger)
         {
-            _serviceProvider = serviceProvider;
+            _logger = logger;
         }
+
         public async Task HandleAsync(TransferCreatedEvent @event)
         {
-            using var scope = _serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<NotificationDbContext>();
+            _logger.LogInformation("📨 [NotificationService] Transfer Event Received: TransferId={TransferId}, Amount={Amount} {Currency}",
+                @event.TransferId, @event.Amount, @event.Currency);
 
-            Console.WriteLine($"📨 [NotificationService] Transfer Event Received: {@event}");
-
-            var alreadyProcessed = await dbContext.InboxMessages
-                .AnyAsync(x => x.Id == @event.Id);
-
-            if (alreadyProcessed)
-            {
-                Console.WriteLine($"⚠️ [NotificationService] Duplicate event detected. Skipping: {@event.Id}");
-                return;
-            }
-
-            if (@event?.Currency != "TRY")
-            {
-                throw new Exception($"Unsupported currency: {@event?.Currency}");
-            }
-
-            Console.WriteLine($"✅ [NotificationService] Transfer completed. Notification sent to user {@event.ReceiverUserId} for {@event.Amount} {@event.Currency}");
-
-            var inboxMessage = new InboxMessage
-            {
-                Id = @event.Id,
-                Name = nameof(TransferCreatedEvent),
-                Consumer = "message",
-                ReceivedAt = @event.CreatedAt,
-                ProcessedAt = DateTime.UtcNow
-            };
-
-            dbContext.InboxMessages.Add(inboxMessage);
-            
             try
             {
-                await dbContext.SaveChangesAsync();
+                // Business validation
+                if (@event?.Currency != "TRY")
+                {
+                    _logger.LogWarning("Unsupported currency: {Currency} for TransferId={TransferId}",
+                        @event?.Currency, @event?.TransferId);
+                    throw new NotSupportedException($"Unsupported currency: {@event?.Currency}");
+                }
+
+                // Simulate notification sending
+                await SimulateNotificationSending(@event);
+
+                _logger.LogInformation("✅ [NotificationService] Transfer completed. Notification sent to user {ReceiverUserId} for {Amount} {Currency}",
+                    @event.ReceiverUserId, @event.Amount, @event.Currency);
             }
-            catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
+            catch (Exception ex)
             {
-                Console.WriteLine("⚠️ [InboxService] Duplicate message detected, skipping insert.");
+                _logger.LogError(ex, "❌ [NotificationService] Error processing transfer event for TransferId={TransferId}",
+                    @event?.TransferId);
+                throw;
             }
+        }
+
+        private static async Task SimulateNotificationSending(TransferCreatedEvent @event)
+        {
+            // Simulate some async work (email, SMS, push notification etc.)
+            await Task.Delay(100);
+
+            // Here you would integrate with real notification services
+            // - Email service
+            // - SMS service  
+            // - Push notification service
         }
     }
 }

@@ -1,16 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TransferService.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MassTransit;
 
 namespace TransferService.Persistence.Contexts
 {
     public class TransferDbContext : DbContext
     {
         public TransferDbContext(DbContextOptions<TransferDbContext> options) : base(options) { }
-
         public DbSet<Transfer> Transfers => Set<Transfer>();
-        public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Transfer>(builder =>
@@ -29,10 +27,8 @@ namespace TransferService.Persistence.Contexts
                  });
             });
 
-            modelBuilder.Entity<OutboxMessage>(builder =>
-            {
-                builder.HasKey(x => x.Id);
-            });
+            modelBuilder.AddOutboxMessageEntity();
+            modelBuilder.AddOutboxStateEntity();
 
             base.OnModelCreating(modelBuilder);
         }

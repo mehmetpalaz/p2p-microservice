@@ -1,8 +1,10 @@
 ﻿using TransferService.Domain.ValueObjects;
+using TransferService.Domain.Common;
+using TransferService.Domain.Events;
 
 namespace TransferService.Domain.Entities
 {
-    public class Transfer
+    public class Transfer : BaseEntity
     {
         public Guid Id { get; private set; }
         public Guid SenderUserId { get; private set; }
@@ -17,11 +19,13 @@ namespace TransferService.Domain.Entities
             ReceiverUserId = receiverUserId;
             Amount = amount;
             CreatedAt = DateTime.UtcNow;
+
+            AddDomainEvent(new TransferCreatedDomainEvent(Id, SenderUserId, ReceiverUserId, Amount.Amount, Amount.Currency));
         }
 
         private Transfer()
         {
-            // EF için parametresiz ctor
+            // Parameterless constructor for EF
         }
     }
 }
